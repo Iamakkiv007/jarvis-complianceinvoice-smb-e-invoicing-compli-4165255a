@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ComplianceInvoice: SMB e-Invoicing Compliance SaaS. Automate multi-country invoice mandates, ensure compliance, reduce risk. Try free today.">
+    <meta name="keywords" content="e-invoicing, compliance, SaaS, SMB, multi-country, invoicing software, tax compliance">
+    <meta property="og:title" content="ComplianceInvoice - SMB e-Invoicing Compliance Made Simple">
+    <meta property="og:description" content="Automate e-invoicing compliance across multiple countries. Reduce risk, save time, ensure regulatory compliance.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://complianceinvoice.com/og-image.png">
+    <title>ComplianceInvoice - e-Invoicing Compliance for SMBs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: -0.5px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 30px;
+            font-size: 14px;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        .btn-primary {
+            background: white;
+            color: #667eea;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .btn-secondary:hover {
+            background: white;
+            color: #667eea;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 20px;
+            text-align: center;
+        }
+
+        .hero-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        section {
+            padding: 80px 20px;
+        }
+
+        section h2 {
+            font-size: 36px;
+            margin-bottom: 50px;
+            text-align: center;
+            color: #333;
+        }
+
+        section h3 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .feature-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.8;
+        }
+
+        .benefits-section {
+            background: #f8f9fa;
+        }
+
+        .benefit-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            align-items: flex-start;
+        }
+
+        .benefit-check {
+            color: #667eea;
+            font-size: 24px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .benefit-text h4 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .benefit-text p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .countries-section {
+            text-align: center;
+        }
+
+        .countries-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 40px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .country-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .pricing-section {
+            background: #f8f9fa;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .pricing-card {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+
+        .pricing-card.featured {
+            border: 2px solid #667eea;
+            transform: scale(1.05);
+        }
+
+        .pricing-card:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .pricing-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .price {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0;
+        }
+
+        .price-period {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .pricing-features {
+            list-style: none;
+            margin: 30px 0;
+            text-align: left;
+        }
+
+        .pricing-features li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .pricing-features li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .testimonials-section {
+            background: white;
+        }
+
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .testimonial-card {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stars {
+            color: #ffc107;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .testimonial-text {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .testimonial-role {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .cta-section h2 {
+            color: white;
+            font-size: 40px;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 32px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            section h2 {
+                font-size: 28px;
+            }
+
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .hero-buttons a {
+                width: 100%;
+                max-width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">ComplianceInvoice</div>
+            <nav>
+                <a href="#features">Features</a>
+                <a href="#countries">Coverage</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#testimonials">Testimonials</a>
+            </nav>
+            <button class="btn-primary">Start Free Trial</button>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="hero-container">
+            <h1>e-Invoicing Compliance Made Simple</h1>
+            <p>Automate invoicing compliance across multiple countries. Stay ahead of regulatory mandates without the complexity.</p>
+            <div class="hero-buttons">
+                <button class="btn-primary">Start Your Free Trial</button>
+                <button class="btn-secondary">Watch Demo</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <div class="container">
+            <h2>Powerful Features for Compliance</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🌍</div>
+                    <h3>Multi-Country Support</h3>
+                    <p>Manage e-invoicing requirements across 40+ countries. Stay compliant with local regulations as they evolve.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Automated Compliance</h3>
+                    <p>Real-time validation against local requirements. Ensure every invoice meets mandatory standards automatically.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔗</div>
+                    <h3>Easy Integration</h3>
+                    <p>Connect with your existing accounting software in minutes. API and pre-built integrations for popular platforms.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Real-Time Reporting</h3>
+                    <p>Dashboard insights into compliance status, submission history, and audit trails for peace of mind.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Enterprise Security</h3>
+                    <p>Bank-level encryption, SOC 2 certified, GDPR compliant. Your invoices are protected at every step.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>Expert Support</h3>
+                    <p>Dedicated compliance specialists available 24/5. Get help navigating complex regulatory changes.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="benefits-section">
+        <div class="container">
+            <h2>Why ComplianceInvoice?</h2>
+            <div style="max-width: 700px; margin: 50px auto 0;">
+                <div class="benefit-item">
+                    <div class="benefit-check">✓</div>
+                    <div class="benefit-text">
+                        <h4>Save 15+ Hours Per Month</h4>
+                        <p>Automate manual compliance checks and invoice preparation across all your markets.</p>
