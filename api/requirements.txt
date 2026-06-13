@@ -1,81 +1,83 @@
-# ComplianceInvoice API Requirements
-# SMB e-Invoicing Compliance SaaS for Multi-Country Mandates
+# ComplianceInvoice - SMB e-Invoicing Compliance SaaS
+# API Requirements
 
 # Core Framework
-Flask==2.3.3
-Flask-RESTful==0.3.10
+Flask==3.0.0
 Flask-CORS==4.0.0
-python-dotenv==1.0.0
+Flask-RESTful==0.3.10
+Werkzeug==3.0.1
 
-# Database
-SQLAlchemy==2.0.21
-Flask-SQLAlchemy==3.0.5
-psycopg2-binary==2.9.7
-alembic==1.12.0
+# Database & ORM
+SQLAlchemy==2.0.23
+psycopg2-binary==2.9.9
+alembic==1.12.1
+redis==5.0.1
 
 # Authentication & Security
 PyJWT==2.8.1
-Flask-JWT-Extended==4.5.2
-bcrypt==4.0.1
-cryptography==41.0.4
-python-jose==3.3.0
+python-dotenv==1.0.0
+cryptography==41.0.7
+bcrypt==4.1.1
+requests-oauthlib==1.3.0
 
-# Invoice Processing & Validation
-lxml==4.9.3
-xmlschema==2.3.1
-pydantic==2.4.2
-python-dateutil==2.8.2
-
-# E-Invoicing Standards Support
-PyPDF2==3.0.1
-reportlab==4.0.7
-qrcode==7.4.2
-pillow==10.0.1
-
-# API Documentation
-Flask-Swagger==0.2.14
-flasgger==0.9.7.1
-
-# Data Serialization
+# API & Data Validation
+pydantic==2.5.0
 marshmallow==3.20.1
-marshmallow-sqlalchemy==0.29.0
+jsonschema==4.20.0
 
-# Async & Background Jobs
-celery==5.3.2
-redis==5.0.0
-flower==2.0.1
+# E-Invoicing Standards & Compliance
+lxml==4.9.3
+zeep==4.2.1
+qrcode==7.4.2
+Pillow==10.1.0
+pypdf==3.17.1
+reportlab==4.0.9
+
+# XML Processing
+xmltodict==13.0.0
+defusedxml==0.0.1
+
+# PDF Generation
+python-pptx==0.6.21
+openpyxl==3.11.0
+
+# Localization & Regional Compliance
+babel==2.14.0
+pytz==2023.3.post1
 
 # Email & Notifications
-Flask-Mail==0.9.1
-sendgrid==6.10.0
-
-# Payment Integration
-stripe==5.15.0
+python-dateutil==2.8.2
+celery==5.3.4
+redis==5.0.1
 
 # Logging & Monitoring
 python-json-logger==2.0.7
-sentry-sdk==1.32.0
+sentry-sdk==1.38.0
 
 # Testing
-pytest==7.4.2
+pytest==7.4.3
 pytest-cov==4.1.0
-pytest-flask==1.2.0
-faker==19.6.2
+pytest-mock==3.12.0
+responses==0.24.1
 
 # Code Quality
-black==23.10.0
+black==23.12.0
 flake8==6.1.0
-pylint==3.0.2
-isort==5.12.0
+isort==5.13.2
+pylint==3.0.3
 
-# API Rate Limiting
-Flask-Limiter==3.5.0
+# API Documentation
+Swagger-ui-py==23.06.06
+flasgger==0.9.7.1
 
-# CORS & Headers Security
-Flask-Talisman==1.1.0
+# Payment Processing (Optional)
+stripe==7.4.0
 
-# Utilities
-requests==2.31.0
-httpx==0.25.0
-arrow==1.3.0
-slugify==0.0.1
+# Encryption
+PyCryptodome==3.19.0
+
+# Environment Management
+python-multipart==0.0.6
+
+# Gunicorn for Production
+gunicorn==21.2.0

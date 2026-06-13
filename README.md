@@ -1,442 +1,320 @@
-# ComplianceInvoice — SMB e-Invoicing Compliance SaaS for Multi-Country Mandates
+# ComplianceInvoice
 
-**Automate e-invoicing compliance across multiple countries. Reduce audit risk. Simplify global invoicing.**
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Supported Countries & Mandates](#supported-countries--mandates)
-- [Getting Started](#getting-started)
-- [Installation](#installation)
-- [Configuration](#configuration)
-- [Usage](#usage)
-- [API Reference](#api-reference)
-- [Compliance Standards](#compliance-standards)
-- [Security & Data Privacy](#security--data-privacy)
-- [Pricing](#pricing)
-- [Support & Documentation](#support--documentation)
-- [Contributing](#contributing)
-- [License](#license)
+**SMB e-Invoicing Compliance SaaS for Multi-Country Mandates**
 
 ---
 
 ## Overview
 
-**ComplianceInvoice** is a purpose-built SaaS platform designed for small and medium-sized businesses (SMBs) operating across multiple jurisdictions. We automate the complex, evolving requirements of e-invoicing mandates—from EU VAT compliance (e-invoicing directives) to emerging requirements in Asia-Pacific and the Americas.
+ComplianceInvoice is a cloud-based e-invoicing compliance platform designed specifically for small and medium-sized businesses (SMBs) operating across multiple countries. We simplify the complexity of managing varying e-invoicing regulations and requirements by providing a unified, easy-to-use solution that ensures your invoices meet all local compliance standards—automatically.
 
-### Why ComplianceInvoice?
+Whether you're invoicing in the EU, UK, Latin America, or beyond, ComplianceInvoice handles the technical and regulatory complexities so you can focus on growing your business.
 
-- **Multi-Country Coverage**: Stay compliant with mandates in 40+ countries without maintaining separate systems
-- **Automated Compliance**: Real-time validation against current regional requirements
-- **Reduced Audit Risk**: Built-in audit trails, digital signatures, and archival compliance
-- **Easy Integration**: REST API, native connectors, and middleware compatibility
-- **Cost-Effective**: Flat-rate pricing—no per-invoice transaction fees
-- **Regulatory Updates**: Automatic updates as tax/compliance rules change
+---
+
+## Why ComplianceInvoice?
+
+### The Problem
+SMBs face mounting pressure from governments worldwide to adopt e-invoicing. Each country has its own:
+- **Format requirements** (UBL, CII, proprietary schemas)
+- **Validation rules** (tax IDs, amounts, dates)
+- **Submission methods** (APIs, web portals, certified platforms)
+- **Audit trails** and compliance documentation
+- **Penalties** for non-compliance (fines up to €10,000+ per violation)
+
+Managing these manually is time-consuming, error-prone, and costly.
+
+### The Solution
+ComplianceInvoice automates e-invoicing compliance across all your markets with:
+- ✅ **Multi-country support** – Pre-configured compliance profiles for 40+ jurisdictions
+- ✅ **Automatic validation** – Real-time checks against local requirements
+- ✅ **Format conversion** – Transform invoices into any required format
+- ✅ **Direct submission** – Seamless integration with government and carrier platforms
+- ✅ **Audit-ready reporting** – Complete compliance documentation and audit trails
+- ✅ **Simple pricing** – Pay per invoice, no setup fees or hidden costs
 
 ---
 
 ## Key Features
 
-### 1. **Universal Invoice Format Conversion**
-   - Convert invoices to country-specific formats (UBL-2.3, EN 16931, ZUGFeRD, Facturae, etc.)
-   - Auto-detect required format based on destination country
-   - Support for multiple input formats (PDF, XML, JSON, CSV)
+### 1. **Multi-Country Compliance Engine**
+Pre-built, regularly updated compliance profiles for:
+- European Union (e-IDAS, EN 16931, Peppol)
+- United Kingdom (MTD for VAT)
+- Latin America (Mexico, Brazil, Argentina, Chile)
+- APAC region (Singapore, Australia, Japan)
+- Middle East (UAE, Saudi Arabia)
+- And growing...
 
-### 2. **Automated Compliance Validation**
-   - Real-time validation of invoice content against regional requirements
-   - Tax ID format verification
-   - Mandatory field enforcement
-   - Currency and date format normalization
-   - Duplicate invoice detection
+### 2. **Intelligent Invoice Processing**
+- **Format auto-detection** – Accepts PDF, XML, JSON, CSV, or ERP exports
+- **Smart validation** – Identifies missing fields, tax issues, and compliance gaps
+- **Auto-correction** – Suggests and applies fixes where possible
+- **Metadata enrichment** – Adds required fields and classifications automatically
 
-### 3. **Digital Signature & Encryption**
-   - EU-compliant qualified electronic signatures (QES)
-   - XAdES and CAdES support
-   - End-to-end encryption for sensitive data
-   - Timestamp authority integration
+### 3. **Native ERP & Accounting Integrations**
+Direct connectors for:
+- QuickBooks Online
+- Xero
+- FreshBooks
+- Zoho Invoice
+- Generic APIs for custom systems
 
-### 4. **Integration & Routing**
-   - Direct connectivity to government e-invoicing portals
-   - SaaS provider integration (Stripe, QuickBooks, SAP, NetSuite)
-   - SFTP, email, and webhook delivery options
-   - Batch processing for high-volume invoicing
+### 4. **Secure Document Management**
+- End-to-end encryption (AES-256)
+- Immutable audit logs (tamper-proof records)
+- Role-based access control (RBAC)
+- GDPR and data residency compliance
 
-### 5. **Audit Trail & Archival**
-   - Immutable transaction logs compliant with regional record-keeping laws
-   - 7-10 year archival retention (configurable)
-   - Tamper-proof PDF generation with metadata
-   - Real-time audit reports
+### 5. **Compliance Dashboard**
+- Real-time submission status tracking
+- Compliance score by country and period
+- Risk alerts and remediation guidance
+- Export-ready audit reports
 
-### 6. **Multi-Language & Multi-Currency**
-   - 25+ language support
-   - Real-time currency conversion and reporting
-   - Localized tax calculations
-   - Regional payment term standards
+### 6. **Direct Government & Carrier Submission**
+- Automated filing to tax authorities (e.g., Italian SDI, Spanish SII)
+- Integration with Peppol network for seamless B2B exchange
+- Certified carrier support for regulated industries
+- Webhook notifications for submission confirmations
 
-### 7. **Dashboard & Analytics**
-   - Submission status tracking (delivered, rejected, pending)
-   - Compliance health score
-   - Invoice volume and VAT analytics
-   - Rejection reason analysis and remediation suggestions
+### 7. **API-First Architecture**
+- RESTful API for custom integrations
+- Webhook support for real-time events
+- SDKs for Python, JavaScript, and Java
+- Sandbox environment for testing
 
 ---
 
-## Supported Countries & Mandates
+## How It Works
 
-| Country | Mandate | Status | Format |
-|---------|---------|--------|--------|
-| **Austria** | e-invoicing requirement (B2B) | Active | UBL-2.3 / EN 16931 |
-| **Belgium** | PEPPOL network requirement | Active | UBL-2.3 |
-| **Czech Republic** | EET (EK system) | Active | Proprietary XML |
-| **Denmark** | OIOUBL (Offentlig Information Online UBL) | Active | UBL-2.3 |
-| **France** | CHORUS Pro (B2G) | Active | UBL-2.3 |
-| **Germany** | ZUGFeRD, XRechnung | Active | ZUGFeRD 2.0 / XRechnung 3.0 |
-| **Greece** | AADE MyData | Active | Greek Format |
-| **Hungary** | Online Invoice System (OIS) | Active | XML |
-| **Italy** | Sistema di Interscambio (SDI) | Active | UBL-2.3 |
-| **Netherlands** | PEPPOL / UBL-2.3 | Active | UBL-2.3 |
-| **Poland** | JPK_FA (VAT invoice register) | Active | XML |
-| **Portugal** | SAF-T (Standard Audit File) | Active | SAF-T XML |
-| **Romania** | e-Invoice System | Active | UBL-2.3 |
-| **Spain** | Facturae, LROE | Active | Facturae 3.2 / UBL-2.3 |
-| **Sweden** | e-invoicing requirement (B2B) | Active | UBL-2.3 |
-| **United Kingdom** | Making Tax Digital (MTD) | Active | JSON/CSV |
-| **Mexico** | CFDI (Comprobante Fiscal Digital por Internet) | Active | CFDI 4.0 |
-| **Brazil** | NF-e, NFS-e | Active | Brazilian XML |
-| **India** | GST e-Invoice, e-Waybill | Active | IRP Format |
-| **Singapore** | PEPPOL network requirement | Active | UBL-2.3 |
-| **Australia** | Voluntary e-invoicing | Planned | UBL-2.3 |
+Your Invoice
+     ↓
+[Upload/API/Integration]
+     ↓
+[Compliance Engine]
+  • Validate
+  • Enrich
+  • Convert
+     ↓
+[Multi-Country Rules Engine]
+  • Check all applicable rules
+  • Flag compliance issues
+     ↓
+[Submit & Track]
+  • Send to government/carriers
+  • Monitor status
+  • Archive for audit
+     ↓
+Compliance ✓
 
-**Note**: Coverage expanding quarterly. [Check our roadmap](https://complianceinvoice.io/roadmap).
+---
+
+## Pricing
+
+### Pay-Per-Invoice Model
+No hidden fees, no long-term contracts.
+
+| Volume | Price per Invoice | Annual Cost Example |
+|--------|-------------------|---------------------|
+| 1–100 | $0.50 | ~$600 |
+| 101–1,000 | $0.40 | ~$4,800 |
+| 1,001–10,000 | $0.30 | ~$36,000 |
+| 10,000+ | Custom | Contact sales |
+
+**Included in all plans:**
+- Multi-country compliance profiles
+- Real-time validation & submission
+- Audit-ready reporting
+- Email support
+- 99.9% uptime SLA
+
+**Premium Add-ons:**
+- Dedicated account manager (+$500/month)
+- Priority API support (+$200/month)
+- Custom compliance rules (+$300/month)
+- Advanced analytics & BI (+$400/month)
 
 ---
 
 ## Getting Started
 
-### Prerequisites
+### 1. **Sign Up** (2 minutes)
+Create your free account at [www.complianceinvoice.com](https://www.complianceinvoice.com)
 
-- Active ComplianceInvoice SaaS account ([sign up free](https://complianceinvoice.io/signup))
-- API key or OAuth credentials
-- Integration environment (REST client, accounting software, or custom application)
+### 2. **Connect Your Data Source** (5 minutes)
+- Link your accounting software, or
+- Upload CSV/JSON samples, or
+- Use our API
 
-### Quick Start (5 Minutes)
+### 3. **Select Your Markets** (3 minutes)
+Choose the countries where you invoice. We auto-configure compliance rules.
 
-1. **Sign Up**: Create account at [complianceinvoice.io](https://complianceinvoice.io)
-2. **Get API Key**: Available in [Dashboard → Settings → API Keys](https://app.complianceinvoice.io/settings/api-keys)
-3. **Create Invoice**: POST to `/api/v1/invoices` with invoice data
-4. **Validate**: System auto-validates against destination country rules
-5. **Submit**: Auto-route or manually submit to relevant e-invoicing portal
+### 4. **Test with Sandbox** (free)
+Upload test invoices, validate, and preview submissions.
 
-### Example Request
-
-curl -X POST https://api.complianceinvoice.io/v1/invoices \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "invoice_number": "INV-2024-001",
-    "invoice_date": "2024-01-15",
-    "supplier": {
-      "name": "Acme Corp",
-      "tax_id": "DE123456789",
-      "country": "DE"
-    },
-    "customer": {
-      "name": "Client Ltd",
-      "tax_id": "IT98765432",
-      "country": "IT"
-    },
-    "total_amount": 1000.00,
-    "currency": "EUR",
-    "destination_country": "IT"
-  }'
+### 5. **Go Live**
+Enable live submission. We handle everything from there.
 
 ---
 
-## Installation
+## Security & Compliance
 
-### Via SaaS (Recommended)
-
-No installation required—use [app.complianceinvoice.io](https://app.complianceinvoice.io).
-
-### Self-Hosted (Enterprise)
-
-# Clone repository
-git clone https://github.com/complianceinvoice/core.git
-cd complianceinvoice
-
-# Install dependencies
-npm install
-
-# Configure environment
-cp .env.example .env
-# Edit .env with database, secrets, etc.
-
-# Run migrations
-npm run migrate
-
-# Start server
-npm run start
-
-### Docker Deployment
-
-docker pull complianceinvoice/core:latest
-docker run -e DATABASE_URL=postgresql://... -p 3000:3000 complianceinvoice/core:latest
+- **SOC 2 Type II certified** – Audited annually
+- **ISO 27001 compliant** – Information security management
+- **GDPR ready** – Data processing agreements and privacy controls
+- **Encryption in transit & at rest** – TLS 1.3 + AES-256
+- **Disaster recovery** – 99.99% uptime guarantee with multi-region backup
+- **Regulatory audit support** – Provide evidence and documentation to authorities
 
 ---
 
-## Configuration
+## Use Cases
 
-### 1. **Organization Settings**
+### Manufacturing & Distribution
+Manage invoices across EU and Latin American suppliers with automated compliance and submission.
 
-Set in Dashboard → Settings → Organization:
+### SaaS & Professional Services
+Stay compliant with evolving e-invoicing mandates while scaling globally without legal overhead.
 
-{
-  "organization_name": "Your Company",
-  "registration_country": "DE",
-  "tax_id": "DE123456789",
-  "default_currency": "EUR",
-  "legal_entity_type": "GmbH"
-}
+### E-commerce
+Handle high-volume, multi-country invoicing with per-transaction compliance checks.
 
-### 2. **Compliance Rules**
+### Staffing & Recruitment
+Simplify invoicing across multiple markets with unified compliance tracking.
 
-Customize validation per country:
-
-{
-  "countries": {
-    "IT": {
-      "mandatory_fields": ["invoice_number", "invoice_date", "tax_id"],
-      "validation_rules": "SDI",
-      "auto_submit": true,
-      "digital_signature_required": true
-    }
-  }
-}
-
-### 3. **Integration Connectors**
-
-Configure in Dashboard → Integrations:
-
-- **Accounting Software**: QuickBooks, Xero, SAP, NetSuite
-- **Payment Gateways**: Stripe, PayPal
-- **E-invoicing Portals**: Government PEPPOL nodes, national systems
-- **Storage**: AWS S3, Azure Blob, Google Cloud Storage
-- **Webhooks**: Custom endpoints for real-time notifications
-
-### 4. **API Authentication**
-
-Use Bearer token authentication:
-
-Authorization: Bearer sk_live_xxxxxxxxxx
-
-Or OAuth 2.0 for third-party integrations.
+### Non-Profit & Government Contractors
+Meet strict e-invoicing and audit requirements for public sector billing.
 
 ---
 
-## Usage
+## Integrations
 
-### Creating an Invoice
+### Accounting Software
+- QuickBooks Online
+- Xero
+- FreshBooks
+- Wave
+- Zoho Books
+- Sage Intacct
 
-const ComplianceInvoice = require('complianceinvoice');
+### Payment Gateways
+- Stripe
+- PayPal
+- Adyen
+- Square
 
-const client = new ComplianceInvoice.Client({
-  apiKey: process.env.COMPLIANCEINVOICE_API_KEY
-});
+### E-signature & Document Workflow
+- DocuSign
+- HelloSign
 
-const invoice = await client.invoices.create({
-  invoice_number: 'INV-2024-001',
-  invoice_date: '2024-01-15',
-  due_date: '2024-02-14',
-  supplier: {
-    name: 'Your Company',
-    address: '123 Main St',
-    city: 'Berlin',
-    postal_code: '10115',
-    country: 'DE',
-    tax_id: 'DE123456789'
-  },
-  customer: {
-    name: 'Client Company',
-    address: '456 Oak Ave',
-    city: 'Rome',
-    postal_code: '00100',
-    country: 'IT',
-    tax_id: 'IT98765432'
-  },
-  line_items: [
-    {
-      description: 'Consulting Services',
-      quantity: 10,
-      unit_price: 100.00,
-      vat_rate: 19.0
-    }
-  ],
-  total_amount: 1190.00,
-  currency: 'EUR'
-});
-
-console.log(invoice.status); // 'validated'
-
-### Submitting to Portal
-
-// Auto-route to appropriate portal
-const submission = await client.invoices.submit(invoice.id, {
-  auto_route: true
-});
-
-// Or manually specify destination
-const submission = await client.invoices.submit(invoice.id, {
-  destination_portal: 'SDI', // Italy's Sistema di Interscambio
-  delivery_method: 'API'
-});
-
-### Checking Status
-
-const status = await client.invoices.getStatus(invoice.id);
-console.log(status);
-// {
-//   "status": "delivered",
-//   "submission_time": "2024-01-15T10:30:00Z",
-//   "delivery_time": "2024-01-15T10:35:00Z",
-//   "portal_reference": "IT2024001"
-// }
-
-### Bulk Processing
-
-const bulkJob = await client.invoices.bulkCreate({
-  source: 's3://bucket/invoices.csv',
-  format: 'csv',
-  mapping: {
-    invoice_number: 'col_0',
-    invoice_date: 'col_1',
-    // ... field mappings
-  },
-  auto_validate: true,
-  auto_submit: true
-});
-
-// Monitor progress
-const progress = await client.jobs.getProgress(bulkJob.id);
+### Custom APIs
+- REST API with full webhook support
+- Python, JavaScript, Java SDKs
+- OpenAPI/Swagger documentation
 
 ---
 
-## API Reference
+## Roadmap
 
-### Base URL
+### Q1 2024
+- [ ] Extended Latin America support (Peru, Colombia, Ecuador)
+- [ ] OCR-based invoice image processing
+- [ ] Advanced spend analytics dashboard
 
-**Production**: `https://api.complianceinvoice.io/v1`  
-**Sandbox**: `https://sandbox-api.complianceinvoice.io/v1`
+### Q2 2024
+- [ ] Blockchain-backed audit trail
+- [ ] Machine learning-driven anomaly detection
+- [ ] Multi-language UI (Spanish, French, Portuguese)
 
-### Endpoints
-
-#### Invoices
-
-- `POST /invoices` — Create invoice
-- `GET /invoices/{id}` — Retrieve invoice
-- `PUT /invoices/{id}` — Update invoice
-- `DELETE /invoices/{id}` — Delete invoice
-- `GET /invoices` — List invoices (paginated)
-- `POST /invoices/{id}/validate` — Validate against rules
-- `POST /invoices/{id}/submit` — Submit to portal
-- `GET /invoices/{id}/status` — Get submission status
-- `GET /invoices/{id}/audit-trail` — View audit log
-
-#### Validation
-
-- `POST /validate` — Validate invoice payload
-- `GET /validation-rules/{country}` — Get country rules
-
-#### Compliance
-
-- `GET /compliance/status` — Overall compliance dashboard
-- `GET /compliance/audit-report` — Generate audit report
-- `GET /compliance/rejections` — List rejected invoices
-
-#### Webhooks
-
-- `POST /webhooks` — Register webhook
-- `GET /webhooks` — List webhooks
-- `PUT /webhooks/{id}` — Update webhook
-- `DELETE /webhooks/{id}` — Remove webhook
-
-### Webhook Events
-
-- `invoice.created`
-- `invoice.validated`
-- `invoice.submitted`
-- `invoice.delivered`
-- `invoice.rejected`
-- `invoice.archived`
-
-### Rate Limiting
-
-- **Free Tier**: 100 requests/hour
-- **Pro**: Unlimited
-- **Enterprise**: Custom
-
-Rate limit headers:
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 87
-X-RateLimit-Reset: 1705334400
+### Q3 2024
+- [ ] APAC expansion (Thailand, Malaysia, Philippines)
+- [ ] Supplier self-service portal for invoice submission
+- [ ] Carbon footprint tracking for green accounting
 
 ---
 
-## Compliance Standards
+## Support & Resources
 
-ComplianceInvoice adheres to and implements the following standards:
+### Knowledge Base
+Comprehensive guides, API documentation, and compliance FAQs at [docs.complianceinvoice.com](https://docs.complianceinvoice.com)
 
-### EU Directives
+### Community Forum
+Connect with other SMB users, share best practices, and get peer support at [community.complianceinvoice.com](https://community.complianceinvoice.com)
 
-- **Directive 2014/55/EU** — Public Procurement e-Invoicing
-- **Directive 2010/45/EU** (amended by 2013/42/EU) — VAT e-invoicing rules
-- **Directive (EU) 2019/1024** — Open Data Directive
+### Live Support
+- **Email:** support@complianceinvoice.com (24-hour response)
+- **Chat:** In-app live chat (Monday–Friday, 9am–6pm CET)
+- **Phone:** +1 (844) COMPLY-1 for Premium customers
 
-### Technical Standards
-
-- **EN 16931:2017** — Universal business language for e-invoicing
-- **UBL 2.3** — OASIS Universal Business Language
-- **PEPPOL (Pan-European Public Procurement On-Line)** — Cross-border e-invoicing network
-- **eIDAS (Regulation EU 910/2014)** — Digital signatures and trust services
-- **XAdES/CAdES** — Qualified electronic signature formats
-
-### Regional Formats
-
-- **ZUGFeRD 2.0** (Germany)
-- **XRechnung 3.0** (Germany)
-- **Facturae 3.2** (Spain)
-- **CFDI 4.0** (Mexico)
-- **GST e-Invoice** (India)
-- **NF-e** (Brazil)
-
-### Data Protection
-
-- **GDPR** — EU General Data Protection Regulation compliance
-- **CCPA** — California Consumer Privacy Act
-- **ISO 27001** — Information security certification
+### Sales Inquiry
+sales@complianceinvoice.com | [Schedule a demo](https://www.complianceinvoice.com/demo)
 
 ---
 
-## Security & Data Privacy
+## FAQ
 
-### Data Protection
+**Q: How long does it take to implement?**
+A: Most customers are live within 1–2 weeks. Simple integrations can go live in days.
 
-- **Encryption at Rest**: AES-256 encryption for all stored data
-- **Encryption in Transit**: TLS 1.3 for all API communications
-- **Zero-Knowledge Architecture**: We cannot access decrypted invoice content
-- **Data Centers**: EU (Frankfurt) and US (Virginia) with automatic failover
+**Q: What if my country isn't supported yet?**
+A: We're continuously expanding. Check our [roadmap](https://www.complianceinvoice.com/roadmap) or contact sales for priority requests.
 
-### Compliance Certifications
+**Q: Can you handle historical invoices?**
+A: Yes. We can bulk-process and validate backlogs, though submission timing depends on local rules.
 
-- ✅ **ISO 27001:2013** — Information Security Management
-- ✅ **SOC 2 Type II** — System Organization Controls
-- ✅ **GDPR Compliant** — Full GDPR compliance
-- ✅ **EU Cloud Code of Conduct** — Cloud provider standards
+**Q: Is my data stored securely?**
+A: All data is encrypted end-to-end, stored in SOC 2 certified data centers, and never shared with third parties without your consent.
 
-### Audit & Logging
+**Q: What happens if compliance rules change?**
+A: We update our engine immediately and notify you. Your invoices remain compliant automatically.
 
-- All API requests logged (30-day retention in logs, long-term in cold storage)
-- Digital signatures on all submissions (immutable proof)
-- Automated compliance aud
+**Q: Do you offer white-label solutions?**
+A: Yes, for enterprise partners. Contact sales for details.
+
+---
+
+## Testimonials
+
+> "ComplianceInvoice cut our invoice processing time by 80% and eliminated compliance headaches across 8 markets. Best investment we made this year."  
+> — **Sarah Chen, CFO, TechStart Europe**
+
+> "We went from manually checking invoices to fully automated validation. Zero compliance violations in 6 months."  
+> — **Marco Rossi, Operations Manager, Italian Design Export Co.**
+
+> "The API integration took an afternoon. Our customers love receiving properly formatted, compliant invoices."  
+> — **Alex Kumar, CTO, SaaS Platform**
+
+---
+
+## Company
+
+**ComplianceInvoice** is a venture-backed SaaS company founded in 2022, headquartered in Amsterdam with operations in London, São Paulo, and Singapore. We're backed by leading fintech and B2B SaaS investors.
+
+- **Website:** [www.complianceinvoice.com](https://www.complianceinvoice.com)
+- **Blog:** [blog.complianceinvoice.com](https://blog.complianceinvoice.com)
+- **Twitter:** [@ComplianceInv](https://twitter.com/ComplianceInv)
+- **LinkedIn:** [ComplianceInvoice](https://linkedin.com/company/complianceinvoice)
+
+---
+
+## License & Legal
+
+ComplianceInvoice is provided as a Software-as-a-Service (SaaS) platform. By using our service, you agree to our [Terms of Service](https://www.complianceinvoice.com/terms) and [Privacy Policy](https://www.complianceinvoice.com/privacy).
+
+© 2024 ComplianceInvoice B.V. All rights reserved.
+
+---
+
+## Contributing & Open Source
+
+We believe in giving back to the community. Check out our open-source projects:
+- [Invoice Validator](https://github.com/complianceinvoice/invoice-validator) – Lightweight e-invoice validation library
+- [Compliance Rules DB](https://github.com/complianceinvoice/compliance-rules) – Community-maintained compliance rules
+
+We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines.
+
+---
+
+**Ready to make e-invoicing compliance simple?**  
+[Start your free trial today →](https://app.complianceinvoice.com/signup)

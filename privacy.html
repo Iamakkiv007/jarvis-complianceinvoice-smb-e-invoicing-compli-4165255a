@@ -1,0 +1,99 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — ComplianceInvoice</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50:  '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    html { scroll-behavior: smooth; }
+    .toc-link:hover { text-decoration: underline; }
+    @media print {
+      .no-print { display: none; }
+      body { font-size: 12pt; }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+
+  <!-- ───────────────────────────── HEADER ───────────────────────────── -->
+  <header class="bg-brand-700 text-white shadow-lg no-print">
+    <div class="max-w-5xl mx-auto px-6 py-5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <!-- Logo mark -->
+        <div class="w-9 h-9 rounded-lg bg-white/20 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <span class="text-xl font-bold tracking-tight">ComplianceInvoice</span>
+      </div>
+      <span class="text-sm text-brand-200 hidden sm:block">SMB e-Invoicing Compliance SaaS</span>
+    </div>
+  </header>
+
+  <!-- ───────────────────────────── HERO BANNER ───────────────────────────── -->
+  <div class="bg-gradient-to-br from-brand-800 to-brand-600 text-white">
+    <div class="max-w-5xl mx-auto px-6 py-14 text-center">
+      <div class="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-1.5 text-sm font-medium mb-5">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        </svg>
+        GDPR Compliant &nbsp;·&nbsp; Last updated: June 1, 2026
+      </div>
+      <h1 class="text-4xl sm:text-5xl font-bold mb-4">Privacy Policy</h1>
+      <p class="text-brand-200 text-lg max-w-2xl mx-auto leading-relaxed">
+        Your privacy matters. This policy explains exactly what data we collect, why we collect it,
+        how we protect it, and the rights you have as a data subject under the GDPR and equivalent
+        national data-protection laws.
+      </p>
+    </div>
+  </div>
+
+  <!-- ───────────────────────────── MAIN LAYOUT ───────────────────────────── -->
+  <div class="max-w-5xl mx-auto px-4 sm:px-6 py-12 flex flex-col lg:flex-row gap-10">
+
+    <!-- ── TABLE OF CONTENTS (sticky sidebar) ── -->
+    <aside class="no-print lg:w-64 flex-shrink-0">
+      <div class="sticky top-6 bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <h2 class="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-4">Contents</h2>
+        <nav class="space-y-1 text-sm">
+          <a href="#controller"       class="toc-link block py-1 px-2 rounded-lg text-brand-700 hover:bg-brand-50 font-medium">1. Data Controller</a>
+          <a href="#scope"            class="toc-link block py-1 px-2 rounded-lg text-gray-600 hover:bg-brand-50">2. Scope & Applicability</a>
+          <a href="#data-collected"   class="toc-link block py-1 px-2 rounded-lg text-gray-600 hover:bg-brand-50">3. Data We Collect</a>
+          <a href="#legal-basis"      class="toc-link block py-1 px-2 rounded-lg text-gray-600 hover:bg-brand-50">4. Legal Basis</a>
+          <a href="#how-we-use"       class="toc-link block py-1 px-2 rounded-lg text-gray-600 hover:bg-brand-50">5. How We Use Data</a>
+          <a href="#retention"        class="toc-link block py-1 px-2 rounded-lg text-gray-600 hover:bg-brand-50">6. Retention Periods</a>
+          <a href="#third-parties"    class="toc-link block py-1 px-2 rounded-lg text-gray-600 hover:bg-brand-50">7. Third-Party Services</a>
+          <a href="#international"    class="toc-link block py-1 px-2 rounded-lg text-gray-600 hover:bg-brand-50">8. International Transfers</a>
+          <a href="#security"         class="toc-link block py-1 px-2 rounded-lg text-gray-600 hover:bg-brand-50">9. Security</a>
+          <a href="#cookies"          class="toc-link block py-1 px-2 rounded-lg text-gray-600 hover:bg-brand-50">10. Cookie Policy

@@ -1,412 +1,392 @@
-// ComplianceInvoice - SMB e-Invoicing Compliance SaaS
-// Main application logic
+/**
+ * ComplianceInvoice - SMB e-Invoicing Compliance SaaS
+ * Multi-Country Mandates Application
+ * Main Application Logic
+ */
 
-class ComplianceInvoice {
-    constructor() {
-        this.currentUser = null;
-        this.invoices = [];
-        this.mandates = {
-            'EU': { name: 'EU (Peppol)', required: true, formats: ['UBL', 'CII'] },
-            'IT': { name: 'Italy (FatturaPA)', required: true, formats: ['XML'] },
-            'ES': { name: 'Spain (Facturae)', required: true, formats: ['XML'] },
-            'FR': { name: 'France (Chorus)', required: true, formats: ['XML', 'PDF'] },
-            'DE': { name: 'Germany (ZUGFeRD)', required: true, formats: ['XML', 'PDF'] },
-            'UK': { name: 'UK (HMRC)', required: false, formats: ['XML'] },
-            'BR': { name: 'Brazil (NF-e)', required: true, formats: ['XML'] },
-            'MX': { name: 'Mexico (CFDI)', required: true, formats: ['XML'] },
-            'SG': { name: 'Singapore (PEPPOL)', required: false, formats: ['UBL', 'CII'] },
-            'AU': { name: 'Australia (PEPPOL)', required: false, formats: ['UBL', 'CII'] }
-        };
-        this.complianceRules = new Map();
-        this.init();
-    }
+// ============================================================================
+// APPLICATION STATE & CONFIGURATION
+// ============================================================================
 
-    init() {
-        this.setupEventListeners();
-        this.loadMandates();
-        this.checkAuthStatus();
-    }
+const APP_CONFIG = {
+  apiBaseUrl: process.env.API_BASE_URL || 'https://api.complianceinvoice.com',
+  version: '1.0.0',
+  supportedCountries: ['IT', 'ES', 'FR', 'DE', 'PL', 'NL', 'AT', 'BE', 'CZ', 'DK', 'SE', 'NO', 'FI', 'PT', 'GR', 'RO', 'HU', 'SK', 'SI', 'HR', 'LT', 'LV', 'EE', 'CY', 'LU', 'MT', 'IE', 'GB'],
+  mandateTypes: {
+    IT: { name: 'Italy', platform: 'SDI', deadline: '2024-01-01', format: 'UBL 2.1' },
+    ES: { name: 'Spain', platform: 'FACe', deadline: '2024-06-15', format: 'UBL 2.1' },
+    FR: { name: 'France', platform: 'Chorus Pro', deadline: '2024-01-01', format: 'UBL 2.1' },
+    DE: { name: 'Germany', platform: 'ZUGFeRD', deadline: '2025-12-31', format: 'ZUGFeRD 2.1' },
+    PL: { name: 'Poland', platform: 'JPK', deadline: '2024-07-01', format: 'XML' },
+    NL: { name: 'Netherlands', platform: 'eIFU', deadline: '2024-01-01', format: 'UBL 2.1' },
+    AT: { name: 'Austria', platform: 'eb-interface', deadline: '2024-01-01', format: 'ebInterface 6.1' },
+    BE: { name: 'Belgium', platform: 'e-invoice', deadline: '2024-06-15', format: 'UBL 2.1' },
+  }
+};
 
-    setupEventListeners() {
-        // Navigation
-        document.querySelectorAll('[data-nav]').forEach(btn => {
-            btn.addEventListener('click', (e) => this.handleNavigation(e));
-        });
+const appState = {
+  user: null,
+  authenticated: false,
+  currentStep: 'dashboard',
+  selectedCountries: [],
+  invoices: [],
+  templates: [],
+  apiKeys: [],
+  compliance: {},
+  notifications: [],
+  loading: false,
+  errors: []
+};
 
-        // Authentication
-        const loginBtn = document.getElementById('login-btn');
-        const signupBtn = document.getElementById('signup-btn');
-        if (loginBtn) loginBtn.addEventListener('click', () => this.showLoginModal());
-        if (signupBtn) signupBtn.addEventListener('click', () => this.showSignupModal());
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
 
-        // Invoice management
-        const uploadInvoiceBtn = document.getElementById('upload-invoice-btn');
-        if (uploadInvoiceBtn) uploadInvoiceBtn.addEventListener('click', () => this.showUploadModal());
+document.addEventListener('DOMContentLoaded', () => {
+  initializeApp();
+});
 
-        const createInvoiceBtn = document.getElementById('create-invoice-btn');
-        if (createInvoiceBtn) createInvoiceBtn.addEventListener('click', () => this.showInvoiceBuilder());
+function initializeApp() {
+  console.log('Initializing ComplianceInvoice Application v' + APP_CONFIG.version);
+  
+  setupEventListeners();
+  checkAuthentication();
+  loadUserPreferences();
+  initializeTheme();
+}
 
-        // Mandate selection
-        document.querySelectorAll('[data-mandate]').forEach(checkbox => {
-            checkbox.addEventListener('change', (e) => this.updateMandateSelection(e));
-        });
+// ============================================================================
+// AUTHENTICATION & USER MANAGEMENT
+// ============================================================================
 
-        // Form submissions
-        const loginForm = document.getElementById('login-form');
-        if (loginForm) loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+function checkAuthentication() {
+  const token = localStorage.getItem('ci_auth_token');
+  const user = localStorage.getItem('ci_user');
+  
+  if (token && user) {
+    appState.authenticated = true;
+    appState.user = JSON.parse(user);
+    showDashboard();
+  } else {
+    showAuthenticationFlow();
+  }
+}
 
-        const signupForm = document.getElementById('signup-form');
-        if (signupForm) signupForm.addEventListener('submit', (e) => this.handleSignup(e));
-
-        const invoiceForm = document.getElementById('invoice-form');
-        if (invoiceForm) invoiceForm.addEventListener('submit', (e) => this.handleInvoiceSubmit(e));
-
-        // Settings
-        document.querySelectorAll('[data-settings-tab]').forEach(tab => {
-            tab.addEventListener('click', (e) => this.switchSettingsTab(e));
-        });
-    }
-
-    checkAuthStatus() {
-        const token = localStorage.getItem('ci_token');
-        const user = localStorage.getItem('ci_user');
+function showAuthenticationFlow() {
+  const mainContent = document.getElementById('main-content');
+  mainContent.innerHTML = `
+    <div class="auth-container">
+      <div class="auth-card">
+        <div class="auth-header">
+          <h1>ComplianceInvoice</h1>
+          <p class="subtitle">Multi-Country e-Invoicing Compliance</p>
+        </div>
         
-        if (token && user) {
-            this.currentUser = JSON.parse(user);
-            this.updateAuthUI();
-            this.loadUserData();
-        }
-    }
+        <div class="auth-tabs">
+          <button class="auth-tab-btn active" data-tab="login">Sign In</button>
+          <button class="auth-tab-btn" data-tab="signup">Create Account</button>
+        </div>
+        
+        <div id="login-tab" class="auth-tab-content active">
+          <form id="login-form" class="auth-form">
+            <div class="form-group">
+              <label for="login-email">Email Address</label>
+              <input type="email" id="login-email" placeholder="your@company.com" required>
+            </div>
+            <div class="form-group">
+              <label for="login-password">Password</label>
+              <input type="password" id="login-password" placeholder="••••••••" required>
+            </div>
+            <div class="form-group checkbox">
+              <input type="checkbox" id="remember-me">
+              <label for="remember-me">Remember me</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+            <button type="button" class="btn btn-link">Forgot password?</button>
+          </form>
+        </div>
+        
+        <div id="signup-tab" class="auth-tab-content">
+          <form id="signup-form" class="auth-form">
+            <div class="form-group">
+              <label for="signup-company">Company Name</label>
+              <input type="text" id="signup-company" placeholder="Your Company Ltd" required>
+            </div>
+            <div class="form-group">
+              <label for="signup-email">Email Address</label>
+              <input type="email" id="signup-email" placeholder="your@company.com" required>
+            </div>
+            <div class="form-group">
+              <label for="signup-password">Password</label>
+              <input type="password" id="signup-password" placeholder="••••••••" required>
+            </div>
+            <div class="form-group">
+              <label for="signup-confirm">Confirm Password</label>
+              <input type="password" id="signup-confirm" placeholder="••••••••" required>
+            </div>
+            <div class="form-group checkbox">
+              <input type="checkbox" id="agree-terms" required>
+              <label for="agree-terms">I agree to Terms of Service & Privacy Policy</label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+          </form>
+        </div>
+        
+        <div class="auth-footer">
+          <p>ComplianceInvoice © 2024. All rights reserved.</p>
+          <div class="auth-links">
+            <a href="#privacy">Privacy Policy</a>
+            <a href="#terms">Terms of Service</a>
+            <a href="#support">Support</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  
+  // Attach event listeners
+  document.querySelectorAll('.auth-tab-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => switchAuthTab(e.target.dataset.tab));
+  });
+  
+  document.getElementById('login-form').addEventListener('submit', handleLogin);
+  document.getElementById('signup-form').addEventListener('submit', handleSignup);
+}
 
-    showLoginModal() {
-        const modal = document.getElementById('login-modal');
-        if (modal) {
-            modal.classList.add('active');
-            document.body.classList.add('modal-open');
-        }
-    }
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.auth-tab-btn').forEach(el => el.classList.remove('active'));
+  
+  document.getElementById(tab + '-tab').classList.add('active');
+  document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+}
 
-    closeModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.classList.remove('active');
-            document.body.classList.remove('modal-open');
-        }
-    }
+async function handleLogin(e) {
+  e.preventDefault();
+  
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+  
+  try {
+    appState.loading = true;
+    const response = await fetch(`${APP_CONFIG.apiBaseUrl}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    
+    if (!response.ok) throw new Error('Authentication failed');
+    
+    const data = await response.json();
+    
+    localStorage.setItem('ci_auth_token', data.token);
+    localStorage.setItem('ci_user', JSON.stringify(data.user));
+    
+    appState.authenticated = true;
+    appState.user = data.user;
+    
+    showNotification('Login successful', 'success');
+    showDashboard();
+  } catch (error) {
+    showNotification('Login failed: ' + error.message, 'error');
+    console.error(error);
+  } finally {
+    appState.loading = false;
+  }
+}
 
-    showSignupModal() {
-        const modal = document.getElementById('signup-modal');
-        if (modal) {
-            modal.classList.add('active');
-            document.body.classList.add('modal-open');
-        }
-    }
+async function handleSignup(e) {
+  e.preventDefault();
+  
+  const company = document.getElementById('signup-company').value;
+  const email = document.getElementById('signup-email').value;
+  const password = document.getElementById('signup-password').value;
+  const confirm = document.getElementById('signup-confirm').value;
+  
+  if (password !== confirm) {
+    showNotification('Passwords do not match', 'error');
+    return;
+  }
+  
+  try {
+    appState.loading = true;
+    const response = await fetch(`${APP_CONFIG.apiBaseUrl}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ company, email, password })
+    });
+    
+    if (!response.ok) throw new Error('Registration failed');
+    
+    const data = await response.json();
+    
+    localStorage.setItem('ci_auth_token', data.token);
+    localStorage.setItem('ci_user', JSON.stringify(data.user));
+    
+    appState.authenticated = true;
+    appState.user = data.user;
+    
+    showNotification('Account created successfully', 'success');
+    showDashboard();
+  } catch (error) {
+    showNotification('Registration failed: ' + error.message, 'error');
+    console.error(error);
+  } finally {
+    appState.loading = false;
+  }
+}
 
-    handleLogin(e) {
-        e.preventDefault();
-        const email = document.getElementById('login-email').value;
-        const password = document.getElementById('login-password').value;
+function logout() {
+  localStorage.removeItem('ci_auth_token');
+  localStorage.removeItem('ci_user');
+  localStorage.removeItem('ci_preferences');
+  
+  appState.authenticated = false;
+  appState.user = null;
+  appState.selectedCountries = [];
+  
+  showAuthenticationFlow();
+  showNotification('Logged out successfully', 'info');
+}
 
-        if (!this.validateEmail(email) || password.length < 6) {
-            this.showNotification('Invalid email or password', 'error');
-            return;
-        }
+// ============================================================================
+// DASHBOARD & MAIN INTERFACE
+// ============================================================================
 
-        this.simulateApiCall('/auth/login', { email, password }, (response) => {
-            if (response.success) {
-                localStorage.setItem('ci_token', response.token);
-                localStorage.setItem('ci_user', JSON.stringify(response.user));
-                this.currentUser = response.user;
-                this.updateAuthUI();
-                this.closeModal('login-modal');
-                this.showNotification('Login successful!', 'success');
-                this.loadUserData();
-            } else {
-                this.showNotification(response.message || 'Login failed', 'error');
-            }
-        });
-    }
+function showDashboard() {
+  const mainContent = document.getElementById('main-content');
+  
+  mainContent.innerHTML = `
+    <div class="dashboard-container">
+      <!-- Sidebar Navigation -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h2>ComplianceInvoice</h2>
+          <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+        </div>
+        
+        <nav class="sidebar-nav">
+          <button class="nav-item active" data-view="dashboard">
+            <span class="icon">📊</span>
+            <span>Dashboard</span>
+          </button>
+          <button class="nav-item" data-view="invoices">
+            <span class="icon">📄</span>
+            <span>Invoices</span>
+          </button>
+          <button class="nav-item" data-view="mandates">
+            <span class="icon">⚖️</span>
+            <span>Mandates</span>
+          </button>
+          <button class="nav-item" data-view="templates">
+            <span class="icon">🎨</span>
+            <span>Templates</span>
+          </button>
+          <button class="nav-item" data-view="integrations">
+            <span class="icon">🔗</span>
+            <span>Integrations</span>
+          </button>
+          <button class="nav-item" data-view="compliance">
+            <span class="icon">✓</span>
+            <span>Compliance</span>
+          </button>
+          <button class="nav-item" data-view="settings">
+            <span class="icon">⚙️</span>
+            <span>Settings</span>
+          </button>
+        </nav>
+        
+        <div class="sidebar-footer">
+          <button class="nav-item" data-view="help">
+            <span class="icon">?</span>
+            <span>Help</span>
+          </button>
+          <button class="nav-item logout-btn" id="logout-btn">
+            <span class="icon">🚪</span>
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+      
+      <!-- Top Bar -->
+      <div class="topbar">
+        <div class="topbar-left">
+          <button id="topbar-menu-toggle" class="topbar-menu-toggle">☰</button>
+          <h1 id="page-title">Dashboard</h1>
+        </div>
+        
+        <div class="topbar-right">
+          <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search invoices...">
+            <button class="search-btn">🔍</button>
+          </div>
+          
+          <div class="notifications-container">
+            <button class="notification-bell" id="notification-bell">
+              🔔
+              <span class="notification-badge" id="notification-count">0</span>
+            </button>
+            <div class="notification-panel" id="notification-panel"></div>
+          </div>
+          
+          <div class="user-menu">
+            <button class="user-avatar" id="user-menu-toggle">
+              ${appState.user?.name?.charAt(0) || 'U'}
+            </button>
+            <div class="user-dropdown" id="user-dropdown">
+              <div class="user-info">
+                <p class="user-name">${appState.user?.name || 'User'}</p>
+                <p class="user-email">${appState.user?.email || ''}</p>
+                <p class="user-company">${appState.user?.company || ''}</p>
+              </div>
+              <hr>
+              <button class="dropdown-item" data-view="settings">Account Settings</button>
+              <button class="dropdown-item" data-view="billing">Billing</button>
+              <hr>
+              <button class="dropdown-item" id="logout-dropdown">Logout</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Main Content -->
+      <main class="main-content" id="view-container">
+        <!-- Content will be loaded here -->
+      </main>
+    </div>
+  `;
+  
+  setupDashboardEventListeners();
+  loadDashboardView('dashboard');
+}
 
-    handleSignup(e) {
-        e.preventDefault();
-        const companyName = document.getElementById('signup-company').value;
-        const email = document.getElementById('signup-email').value;
-        const password = document.getElementById('signup-password').value;
-        const confirmPassword = document.getElementById('signup-confirm-password').value;
-
-        if (!companyName || !this.validateEmail(email) || password.length < 6) {
-            this.showNotification('Please fill in all fields correctly', 'error');
-            return;
-        }
-
-        if (password !== confirmPassword) {
-            this.showNotification('Passwords do not match', 'error');
-            return;
-        }
-
-        this.simulateApiCall('/auth/signup', { companyName, email, password }, (response) => {
-            if (response.success) {
-                localStorage.setItem('ci_token', response.token);
-                localStorage.setItem('ci_user', JSON.stringify(response.user));
-                this.currentUser = response.user;
-                this.updateAuthUI();
-                this.closeModal('signup-modal');
-                this.showNotification('Account created successfully!', 'success');
-            } else {
-                this.showNotification(response.message || 'Signup failed', 'error');
-            }
-        });
-    }
-
-    updateAuthUI() {
-        const authSection = document.querySelector('.auth-section');
-        const userSection = document.querySelector('.user-section');
-
-        if (this.currentUser) {
-            if (authSection) authSection.style.display = 'none';
-            if (userSection) {
-                userSection.style.display = 'flex';
-                const userName = userSection.querySelector('.user-name');
-                if (userName) userName.textContent = this.currentUser.companyName || this.currentUser.email;
-            }
-        } else {
-            if (authSection) authSection.style.display = 'flex';
-            if (userSection) userSection.style.display = 'none';
-        }
-    }
-
-    showUploadModal() {
-        if (!this.currentUser) {
-            this.showNotification('Please login first', 'warning');
-            this.showLoginModal();
-            return;
-        }
-
-        const modal = document.getElementById('upload-modal');
-        if (modal) {
-            modal.classList.add('active');
-            document.body.classList.add('modal-open');
-
-            const dropZone = modal.querySelector('.drop-zone');
-            if (dropZone) {
-                dropZone.addEventListener('dragover', (e) => e.preventDefault());
-                dropZone.addEventListener('drop', (e) => this.handleFileDrop(e, modal));
-                dropZone.addEventListener('click', () => {
-                    const input = modal.querySelector('input[type="file"]');
-                    if (input) input.click();
-                });
-            }
-
-            const fileInput = modal.querySelector('input[type="file"]');
-            if (fileInput) {
-                fileInput.addEventListener('change', (e) => this.handleFileSelect(e, modal));
-            }
-        }
-    }
-
-    handleFileDrop(e, modal) {
-        e.preventDefault();
-        const files = e.dataTransfer.files;
-        this.processFiles(files, modal);
-    }
-
-    handleFileSelect(e, modal) {
-        const files = e.target.files;
-        this.processFiles(files, modal);
-    }
-
-    processFiles(files, modal) {
-        Array.from(files).forEach(file => {
-            if (this.isValidInvoiceFile(file)) {
-                this.uploadFile(file);
-            } else {
-                this.showNotification(`Invalid file format: ${file.name}`, 'error');
-            }
-        });
-    }
-
-    isValidInvoiceFile(file) {
-        const validFormats = ['application/xml', 'application/pdf', 'text/xml'];
-        const validExtensions = ['.xml', '.pdf', '.ubl', '.ublx'];
-        const extension = '.' + file.name.split('.').pop().toLowerCase();
-        return validFormats.includes(file.type) || validExtensions.includes(extension);
-    }
-
-    uploadFile(file) {
-        const formData = new FormData();
-        formData.append('file', file);
-        formData.append('userId', this.currentUser.id);
-
-        // Simulate file upload
-        const progressBar = document.querySelector('.upload-progress');
-        if (progressBar) {
-            progressBar.style.display = 'block';
-        }
-
-        setTimeout(() => {
-            const invoice = {
-                id: this.generateId(),
-                fileName: file.name,
-                uploadDate: new Date().toLocaleDateString(),
-                status: 'Processing',
-                complianceStatus: 'Validating',
-                mandates: []
-            };
-
-            this.invoices.push(invoice);
-            this.validateInvoice(invoice);
-            this.showNotification(`File uploaded: ${file.name}`, 'success');
-            this.closeModal('upload-modal');
-            this.refreshInvoiceList();
-        }, 1500);
-    }
-
-    showInvoiceBuilder() {
-        if (!this.currentUser) {
-            this.showNotification('Please login first', 'warning');
-            this.showLoginModal();
-            return;
-        }
-
-        const modal = document.getElementById('invoice-builder-modal');
-        if (modal) {
-            modal.classList.add('active');
-            document.body.classList.add('modal-open');
-        }
-    }
-
-    handleInvoiceSubmit(e) {
-        e.preventDefault();
-
-        const invoiceData = {
-            id: this.generateId(),
-            invoiceNumber: document.getElementById('invoice-number')?.value,
-            issueDate: document.getElementById('issue-date')?.value,
-            dueDate: document.getElementById('due-date')?.value,
-            supplier: {
-                name: document.getElementById('supplier-name')?.value,
-                taxId: document.getElementById('supplier-tax-id')?.value,
-                address: document.getElementById('supplier-address')?.value
-            },
-            customer: {
-                name: document.getElementById('customer-name')?.value,
-                taxId: document.getElementById('customer-tax-id')?.value,
-                address: document.getElementById('customer-address')?.value
-            },
-            items: this.getInvoiceItems(),
-            totalAmount: this.calculateTotal(),
-            currency: document.getElementById('currency')?.value || 'USD'
-        };
-
-        if (this.validateInvoiceData(invoiceData)) {
-            this.invoices.push(invoiceData);
-            this.validateInvoice(invoiceData);
-            this.showNotification('Invoice created successfully', 'success');
-            document.getElementById('invoice-form').reset();
-            this.closeModal('invoice-builder-modal');
-            this.refreshInvoiceList();
-        } else {
-            this.showNotification('Please fill in all required fields', 'error');
-        }
-    }
-
-    getInvoiceItems() {
-        const items = [];
-        document.querySelectorAll('.invoice-item-row').forEach((row, index) => {
-            items.push({
-                description: row.querySelector('.item-description')?.value,
-                quantity: parseFloat(row.querySelector('.item-quantity')?.value) || 0,
-                unitPrice: parseFloat(row.querySelector('.item-price')?.value) || 0,
-                amount: (parseFloat(row.querySelector('.item-quantity')?.value) || 0) * 
-                        (parseFloat(row.querySelector('.item-price')?.value) || 0)
-            });
-        });
-        return items.filter(item => item.description && item.quantity > 0);
-    }
-
-    calculateTotal() {
-        return this.getInvoiceItems().reduce((sum, item) => sum + item.amount, 0);
-    }
-
-    validateInvoiceData(data) {
-        return data.invoiceNumber && 
-               data.issueDate && 
-               data.supplier.name && 
-               data.supplier.taxId && 
-               data.customer.name && 
-               data.customer.taxId &&
-               data.items.length > 0;
-    }
-
-    validateInvoice(invoice) {
-        const applicableMandates = this.getApplicableMandates();
-        const complianceResults = {
-            invoice: invoice.id,
-            timestamp: new Date().toISOString(),
-            mandates: {},
-            overallStatus: 'Compliant',
-            warnings: [],
-            errors: []
-        };
-
-        applicableMandates.forEach(country => {
-            const mandate = this.mandates[country];
-            const result = this.checkCompliance(invoice, country, mandate);
-            complianceResults.mandates[country] = result;
-
-            if (result.status === 'Non-Compliant') {
-                complianceResults.overallStatus = 'Non-Compliant';
-            }
-            if (result.warnings.length > 0) {
-                complianceResults.warnings.push(...result.warnings);
-            }
-            if (result.errors.length > 0) {
-                complianceResults.errors.push(...result.errors);
-            }
-        });
-
-        invoice.complianceResults = complianceResults;
-        invoice.complianceStatus = complianceResults.overallStatus;
-        this.saveInvoice(invoice);
-    }
-
-    getApplicableMandates() {
-        const selected = document.querySelectorAll('[data-mandate]:checked');
-        if (selected.length > 0) {
-            return Array.from(selected).map(el => el.value);
-        }
-        return Object.keys(this.mandates);
-    }
-
-    checkCompliance(invoice, country, mandate) {
-        const result = {
-            status: 'Compliant',
-            mandate: mandate.name,
-            format: 'Unknown',
-            checklist: [],
-            warnings: [],
-            errors: []
-        };
-
-        // Format validation
-        const hasValidFormat = mandate.formats.some(fmt => this.checkFormat(invoice, fmt));
-        if (!hasValidFormat) {
-            result.errors.push(`Invalid format. Required: ${mandate.formats.join(', ')}`);
-            result.status = 'Non-Compliant';
-        } else {
-            result.format = this.detectFormat(invoice);
-        }
-
-        // Tax ID validation
-        if (!this.validateTaxId(invoice.supplier.taxId, country)) {
-            result.errors.push(`Invalid tax ID format for ${country}`);
-            result.status = 'Non-Compliant';
-        } else {
-            result.checklist.push('✓ Tax ID format valid');
-        }
-
-        // Required fields validation
-        const requiredFields = this.getRequiredFields(country);
-        requiredFields.forEach(field => {
-            if (this.hasField(invoice, field)) {
-                result.checklist.push(`✓ ${field
+function setupDashboardEventListeners() {
+  // Navigation
+  document.querySelectorAll('.nav-item').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const view = e.currentTarget.dataset.view;
+      if (view === 'logout' || e.currentTarget.classList.contains('logout-btn')) {
+        logout();
+      } else {
+        loadDashboardView(view);
+      }
+    });
+  });
+  
+  // Logout button
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) logoutBtn.addEventListener('click', logout);
+  
+  const logoutDropdown = document.getElementById('logout-dropdown');
+  if (logoutDropdown) logoutDropdown.addEventListener('click', logout);
+  
+  // User menu toggle
+  document.getElementById('user-menu-toggle').addEventListener('click', toggleUserMenu);
+  document.getElementById('logout-dropdown').addEventListener('click', logout);
+  
+  // Notification bell
+  document.getElementById('notification-bell').addEventListener('click', toggleNotificationPanel);
+  
+  // Sidebar toggle
+  document.getElementById('sidebar-toggle').addEventListener('click', toggleSidebar);
+  document.getElementById('topbar-menu-toggle').addEventListener('click', toggleS
